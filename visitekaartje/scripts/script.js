@@ -1,6 +1,7 @@
-const APIbase = 'https://cors-anywhere.herokuapp.com/https://whois.fdnd.nl/api/v1/member?id='
+const APIbase = 'https://stefan-the-api-middleman.netlify.app/.netlify/functions/getUser?id='
 const myID = 'cldex2mi547qx0av09x25jscf';
 const APIendPoint = `${APIbase}${myID}`
+// 
 
 const cards = document.querySelectorAll('.card')
 
@@ -32,6 +33,9 @@ class Card {
     cardInfo() {
         return this.node.querySelector('.card__info')
     }
+    cardEmoji() {
+        return this.node.querySelector('.card__emoji')
+    }
 
     carrouselTitle() {
         return this.node.querySelector('.carrousel__title')
@@ -46,21 +50,31 @@ class Card {
         return this.node.querySelectorAll('.carrousel__button')
     }
 
+    carrouselAssets() {
+        return this.node.querySelectorAll('.carrousel__asset')
+    }
+
 
 
     bindEvents() {
         this.cardControls().forEach(control => {
-            if(!control.classList.contains("card__control--reload")){
+            if(control.classList.contains("card__control--flip")){
                 control.addEventListener('click', () => {
                     this.flipCard(!this.state)
                 })
             } else if (control.classList.contains("card__control--reload")) {
                 control.addEventListener('click', () => {
                     startAnimation()
+                    control.classList.add("spin-animation")
+                    const remove = () => {
+                        control.classList.remove("spin-animation");
+                    }
+                    setTimeout(remove, 1000)
+
                 })
             }
         })
-
+    
         document.addEventListener('keydown', (e) => {
             if(e.keyCode == 70){
                 this.flipCard(!this.state)
@@ -69,16 +83,10 @@ class Card {
     }
 
     fetchData () {
-        fetch(APIendPoint, {
-            method: 'GET', // *GET, POST, PUT, DELETE, etc.
-            // mode: 'cors', // no-cors, *cors, same-origin
-            credentials: 'same-origin', // include, *same-origin, omit
-            headers: {
-                'Access-Control-Allow-Origin': '*'
-        }})
+        fetch(APIendPoint)
         .then(data => data.json())
-        .then((data) => {
-            const user = data.member;
+        .then(({data}) => {
+            const user = data[0];
             this.setData(user);
             if(user) {
                 this.data = user
@@ -88,6 +96,7 @@ class Card {
                 emojis = JSON.parse(this.data.avatar.replaceAll(`'`, `"`))
                 pets = emojis
                 startAnimation()
+                this.cardEmoji().textContent = emojis[Math.floor((Math.random() * emojis.length))]
                 this.render()
             }
         })
@@ -124,27 +133,77 @@ class Card {
     renderCard() {
         this.cardNames().forEach(name => name.textContent = this.makeName())
         this.cardLink().href = this.data.website
+        this.cardControls().forEach(control => {
+            if(control.classList.contains("card__control--git")){
+                const currentHref = control.href;
+
+                control.href = currentHref + this.data.gitHubHandle
+            }
+            return
+        })
 
         // Make carrousel
         Object.keys(this.data.bio).forEach((key, index) => {
             const title = this.data.bio[key].title;
             const content = this.data.bio[key].content;
             const link = this.data.bio[key].link;
+            const asset = this.data.bio[key].image ? this.data.bio[key].image.replaceAll("&amp;", "&") : this.data.bio[key].logopath
+            const sourceType = this.data.bio[key].image ? "img" : "svg"
             this.carrouselButtons()[index].textContent = key;
 
             if(index == 0) {
                 this.carrouselTitle().textContent = title
                 this.carrouselContent().textContent = content
-                if(link) {
-                    this.carrouselLink().textContent = link
-                }
+                this.carrouselLink().textContent = link
+                this.carrouselLink().href = link
+
+                this.carrouselAssets().forEach(assetSource => {
+                    if(sourceType == "svg") {
+                        if(assetSource.classList.contains("carrousel__asset--img")){
+                            assetSource.style.display = "none"
+                        } else {
+                            assetSource.children[0].setAttribute("d", asset);
+                            assetSource.style.display = "block";
+                        }
+                    } else {
+                        if(assetSource.classList.contains("carrousel__asset--svg")){
+                            assetSource.style.display = "none";
+                        } else {
+                            assetSource.src = asset;
+                            assetSource.style.display = "block";
+                        }
+                    }
+                })
             }            
 
             this.carrouselButtons()[index].addEventListener('click', () => {
                 this.carrouselTitle().textContent = title
                 this.carrouselContent().textContent = content
+                this.carrouselAssets().forEach(assetSource => {
+                    if(sourceType == "svg") {
+                        if(assetSource.classList.contains("carrousel__asset--img")){
+                            assetSource.style.display = "none"
+                        } else {
+                            assetSource.children[0].setAttribute("d", asset);
+                            assetSource.style.display = "block";
+                        }
+                    } else {
+                        if(assetSource.classList.contains("carrousel__asset--svg")){
+                            assetSource.style.display = "none";
+                        } else {
+                            assetSource.src = asset;
+                            assetSource.style.display = "block";
+                        }
+                    }
+                })
                 if(link) {
+                    this.carrouselLink().style.display = "block"
                     this.carrouselLink().textContent = link
+                    this.carrouselLink().href = link
+                } else {
+                    this.carrouselLink().textContent = "noLink"
+                    this.carrouselLink().href = "#"
+                    this.carrouselLink().style.display = "none"
                 }
             })
 
@@ -198,7 +257,7 @@ const items = new Array(max).fill().map((i) => {
 function draw() {
     let now = Date.now();
     
-    if((now - startTime) >= 10000){
+    if((now - startTime) >= 15000){
         return
     }
 
