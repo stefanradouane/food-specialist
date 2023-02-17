@@ -1,0 +1,21 @@
+@import '../../node_modules/microscope-sass/lib/typography';
+
+.cta{
+    @include body;
+    @include body--big;
+    font-size: 24px!important;
+    display: block;
+    padding:14px 20px;
+    background-color: var(--prim-color);
+    transition: $transition-settings;
+    color: $white-color;
+    text-transform: uppercase;
+    font-weight: bold;
+    text-decoration: none;
+    text-align: center;
+    border: none;
+
+    &:hover{
+        background-color: $hover-color;
+    }
+}

@@ -1,0 +1,28 @@
+.detailpage{
+    display: block;
+    inset: 52px 0 0 0;
+    width: 100%;
+    height: calc(100% - 52px);
+    padding: 20px;
+    transform: translateX(-100%);
+    border: none;
+    transition: 200ms all;
+    
+    &[aria-expanded="true"]{
+        transform: translateX(0%);
+    }
+
+    &__control{
+        background-color: $sec-color;
+        position: absolute;
+        top: 0;
+        right: 0;
+        height: 52px;
+        width: 52px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: none;        
+    }
+    
+}

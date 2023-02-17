@@ -1,0 +1,52 @@
+.result{
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: 20% 1fr;
+    grid-template-rows: auto 1fr;
+    grid-template-areas: "image title"
+    "image info";
+    height: 130px;
+    gap:5px 10px;
+
+    &:hover{
+        background: grey;
+    }
+    
+    @include laptop{
+        gap:10px 40px;
+    }
+
+    &__title{
+        grid-area: title;
+    }
+
+    &__info{
+        grid-area: info;
+    }
+
+    &__image{
+        width: 100%;
+        height: 100%;
+        grid-area: image;
+        object-fit: contain;
+        object-position: top;
+    }
+
+    &-empty{
+        height: 100%;
+        width: 100%;
+        margin: auto;
+        display: flex;
+        flex-direction: column;
+        overflow: auto;
+        margin-bottom: 50px;
+        align-items: center;
+        justify-content: center;
+
+        &__image{
+            width:50%;
+            max-width: 350px;
+            mix-blend-mode: color-burn;
+        }
+    }
+}

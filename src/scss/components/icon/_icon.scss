@@ -1,0 +1,16 @@
+.icon {
+    fill:$black-color;
+    height: fit-content;
+    max-width: 200px;
+    display: block;
+
+    &--camera{
+        min-width: 40px;
+    }
+
+    &--cross{
+        height: 20px;
+        width: 20px;
+        fill: $white-color;
+    }
+}

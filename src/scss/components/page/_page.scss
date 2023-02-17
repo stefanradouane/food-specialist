@@ -1,0 +1,10 @@
+.page{
+    @include responsive(padding,20px 16px 16px, 42px, 42px, 42px 84px);
+    max-width: 1440px;
+    margin: auto;
+    display: flex;
+    gap: 20px;
+    flex-direction: column;
+    height: calc(100vh - 52px);
+    height: calc(100dvh - 52px);
+}

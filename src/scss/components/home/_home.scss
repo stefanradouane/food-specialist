@@ -1,3 +1,30 @@
-body{
-    background:yellow;
+.home{
+    @include responsive(padding, 6em 2em, 8em 4em);
+    border:none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    inset: 0;
+    height: 100%;
+    padding:6em 2em;
+    gap: 4em;
+    width: 100%;
+    transition: 250ms all;
+
+    .cta{
+        margin-top: 4em;
+    }
+
+    &__subtitle{
+        position: absolute;
+        bottom:1em;
+    }
+
+    &[aria-expanded="true"]{
+        transform: translate(0);
+    }
+
+    &[aria-expanded="false"]{
+        transform: translateY(-100%);
+    }
 }

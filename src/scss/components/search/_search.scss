@@ -1,0 +1,40 @@
+.search{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    gap:16px;
+
+    &__input{
+        @include body;
+        width: calc(100% - 52px);
+        padding: 8px;
+    }
+
+    &__control{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        width: 52px;
+        height: 52px;
+        background-color:var(--prim-color);
+        border: none;
+    }
+
+    &__results{
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    &__form{
+        width: 100%;
+        height: 52px;
+        display: flex;
+    }
+}
