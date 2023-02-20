@@ -22,7 +22,23 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        border: none;        
+        border: none;   
+    }
+
+    &__image{
+        width: 300px;
+        max-height: 200px;
+        object-fit: contain;
+    }
+
+    &__table{
+        border: 1px solid grey;
+        // border-collapse: collapse;
+        
+        td, th{
+            border: 1px solid grey;
+            
+        }
     }
     
 }

@@ -1,3 +1,6 @@
+import {paginatorSwitch} from './search-paginator'
+import {detailPage} from '../detailpage/detailpage'
+
 const baseEndpoint = 'https://nl.openfoodfacts.org/cgi/search.pl?search_terms=&json=true'
 const searchForm = document.querySelectorAll(".search")
 
@@ -6,9 +9,9 @@ const apiEndpoint = (query, page, pageSize) => {
     return `https://nl.openfoodfacts.org/cgi/search.pl?search_terms=${query}&page=${page}&page_size=${pageSize}&json=true`
 }
 
-
 class Search {
     constructor(node) {
+        this.loading = true;
         this.node = node;
         this.data = null;
         this.query = "";
@@ -20,39 +23,44 @@ class Search {
 
     bindEvents() {
         this.searchForm().addEventListener("submit", (e) => {
+            // Prevent the page from loading again.
             e.preventDefault()
         })
 
-        // this.searchPaginatorControl().forEach(paginator => {
-        //     if(paginator.value == "next"){ 
-        //         console.log(paginator)
-        //         paginator.addEventListener("click", (e) => {
-        //             console.log(e.target)
-        //             const current = this.page
-        //             this.page = current + 1;
-        //             this.fetchData()
-        //         })
-        //     }
-        // })
-
         this.searchControl().addEventListener("click", (e) => {
-            this.query = this.searchInput().value;
-            this.page = 1;
-            this.fetchData()
+            // Check if the seacht value is changed
+            if(this.query !== this.searchInput().value) {
+                // If changed, change query and fetch data again
+                this.query = this.searchInput().value;
+                this.page = 1;
+                // Prevent paginator listeners to duplicate on query change.
+                this.removeListerens()
+                // Fetch data
+                this.fetchData()
+            }
         })
 
-        
+        this.searchContainer().addEventListener("scroll", (e) => {
+            if(this.collapsibleHeader().classList.contains("collapsible-header--scrolled")){
+                if(e.target.scrollTop == 0){
+                    this.collapsibleHeader().classList.remove("collapsible-header--scrolled")
+                }
+            } else {
+                this.collapsibleHeader().classList.add("collapsible-header--scrolled")
+            }
+        })
     }
 
     init() {
         this.fetchData()
-        this.render()
         this.bindEvents()
-        // if(this.data != null){
-        // }
     }
 
     fetchData() {
+        this.loading = true;
+        this.searchCount().textContent = "loading..."
+        this.node.classList.add("search--loading")
+        this.searchControl().disabled = true
         const fetchExec = async () => {
             const response = await fetch(apiEndpoint(this.query, this.page, this.pageSize));
             if (!response.ok) {
@@ -94,21 +102,10 @@ class Search {
         return this.node.querySelector(".search__input")
     }
 
-    detailModal() {
-        return document.querySelector(".detailpage")
+    collapsibleHeader() {
+        return document.querySelector(".collapsible-header")
     }
 
-    detailModalImage() {
-        return document.querySelector(".detailpage__image")
-    }
-
-    detailModalTitle() {
-        return document.querySelector(".detailpage__title")
-    }
-
-    detailModalProtein() {
-        return document.querySelector(".detailpage__protein")
-    }
 
     pageCount () {
         const pages = this.pages;
@@ -121,6 +118,10 @@ class Search {
 
     render() {
         if(this.data != null) {
+            this.loading = false;
+            this.node.classList.remove("search--loading")
+            this.searchControl().removeAttribute("disabled")
+
             if(this.data.count){
                 this.searchCount().textContent =  `Totaal: ${this.data.count} items`;
             } else {
@@ -165,7 +166,7 @@ class Search {
                 itemContainer.dataset.id = product._id
                 const itemImage = document.createElement("img");
                 itemImage.classList.add("result__image")
-                itemImage.src = product.image_front_url
+                itemImage.src = product.image_front_url ? product.image_front_url : "public/assets/images/eaten-apple.png"
                 const item = document.createElement("h2")
                 item.classList.add("result__title")
                 item.textContent = product.product_name;
@@ -188,155 +189,10 @@ class Search {
     }
 
     makePaginator() {
-        console.log(this.page)
-        console.log(this.pageCount())
-        console.log(this.paginator())
-        console.log(this.searchPaginatorControl())
-        const removeListerens = () => {
-            this.searchPaginatorControl().forEach(item => {
-                item.parentNode.replaceChild(item.cloneNode(true), item);
-            })
-        }
-        this.searchPaginatorControl().forEach(item => {
-            // item.removeEventListener("click" , pageDown, {capture: false})
+        this.searchPaginatorControl().forEach(item => {  
+            paginatorSwitch(item, this);
 
-            console.log(this.pageCount() == 1 || this.page == 1)
-            switch (item.value) {
-                case "previous":
-                    if(this.pageCount() == 1 || this.page == 1) {
-                        item.disabled = true   
-                    }  else {                        
-                        item.removeAttribute("disabled") 
-                        item.addEventListener("click", () => {
-                            removeListerens()
-                            const current = this.page
-                            this.page = current - 1;
-                            this.fetchData()
-                        })
-                    }
-
-                    
-
-                    
-
-                  break;
-                case "current":
-                    if (this.page == 150) {
-                        item.removeAttribute("disabled") 
-                        item.textContent = "1"
-                    } else if (this.page == 150 || this.page == 149 || this.page == 148) {
-                        item.textContent = "1"
-                    } else {
-                        item.textContent = this.page
-
-                    }
-                  break;
-                case "next":
-                    if(this.pageCount() == 1) {
-                        item.style.display = "none"   
-                    }
-                    
-                    if(this.page == 150 || this.page == 149 || this.page == 148) {
-                        item.textContent = "..."
-                        
-                    } else {
-                        item.textContent = this.page + 1
-                        item.addEventListener("click", (e) => {
-                            removeListerens()
-                            const current = this.page
-                            this.page = current + 1;
-                            this.fetchData()
-                        })
-                    }
-                    
-                  break;
-                case "dblnext":
-                    if(this.pageCount() == 1) {
-                        item.style.display = "none"   
-                    }
-
-                    if(this.page == 150) {
-                        item.textContent = this.page - 2;
-                        item.addEventListener("click", (e) => {
-                            removeListerens()
-                            const current = this.page
-                            this.page = current - 2;
-                            this.fetchData()
-                        })
-                    } else if (this.page == 149){
-                        item.textContent = this.page - 1;
-                        item.addEventListener("click", (e) => {
-                            removeListerens()
-                            const current = this.page - 1
-                            this.page = current;
-                            this.fetchData()
-                        })                        
-                    } else if (this.page == 148){
-                        item.textContent = this.page;                      
-                    } else {
-                        item.textContent = this.page + 2
-                        item.addEventListener("click", (e) => {
-                            removeListerens()
-                            const current = this.page
-                            this.page = current + 2;
-                            this.fetchData()
-                        })
-                    }
-
-                  break;
-                case "none":
-                    if(this.pageCount() == 1) {
-                        item.style.display = "none"   
-                    }
-
-                    if(this.page == 150) {
-                        item.textContent = this.page - 1;
-                        item.addEventListener("click", (e) => {
-                            removeListerens()
-                            const current = this.page - 1
-                            this.page = current;
-                            this.fetchData()
-                        })                        
-                    } else if (this.page == 149){
-                        item.textContent = this.page;                        
-                    } else if (this.page == 148){
-                        item.textContent = this.page + 1;
-                        item.addEventListener("click", (e) => {
-                            removeListerens()
-                            const current = this.page + 1
-                            this.page = current;
-                            this.fetchData()
-                        })                        
-                    } else {
-                        item.textContent = "..."
-                    }
-                  break;
-                case "last":
-                    if(this.pageCount() == 1) {
-                        item.style.display = "none"   
-                    }
-
-                    item.addEventListener("click", (e) => {
-                        removeListerens()
-                        const current = this.pageCount()
-                        this.page = current;
-                        this.fetchData()
-                    })
-
-                    item.textContent = this.pageCount()
-                  break;
-                case "continue":
-                    if(this.pageCount() == 1) {
-                        item.disabled = "true"  
-                    } else if (this.page == 150){
-                        item.disabled = "true"  
-                    } else {
-                        item.removeAttribute("disabled") 
-                    }
-                break;
-            }
-
-            // Reset
+            // Reset active class every page button
             item.classList.remove("paginator__control--active")
             if(item.textContent == this.page){
                 item.classList.add("paginator__control--active")
@@ -347,151 +203,21 @@ class Search {
 
     }
 
-    async showModal(e){
+    showModal(e){
         let target = e.target.nodeName !== "SECTION" ? e.target.parentNode.dataset.id : e.target.dataset.id
-        console.log(target)
 
-        this.detailModal().ariaExpanded = "true"
+        detailPage(target)
+    }
 
-        
-        const fetchDetailPage = async () => {
-            const response = fetch(`https://nl.openfoodfacts.org/api/v0/product/${target}.json`)
-            console.log(await response)
-            const detailData = await response;
-            if (!detailData.ok) {
-                throw new Error("Network response was not ok");
-            }
-
-            // const data = await response
-            // console.log(data)
-            // return data
-            return detailData.json()
-        }
-
-        const productInfo = await fetchDetailPage()
-
-        this.detailModalTitle().textContent = productInfo.product.product_name
-        this.detailModalImage().src = productInfo.product.image_front_url
-        this.detailModalProtein().textContent = `Proteine ${productInfo.product.nutriments.proteins}${productInfo.product.nutriments.proteins_unit} Totaal, ${productInfo.product.nutriments.proteins_100g}${productInfo.product.nutriments.proteins_unit} / 100${productInfo.product.nutriments.proteins_unit}`;
-
-
-        console.log(this.detailModal())
+    // Function for the paginator to replace each item
+    // By replacing an item all event listeners will be removed.
+    removeListerens = () => {
+        this.searchPaginatorControl().forEach(item => {
+            item.parentNode.replaceChild(item.cloneNode(true), item);
+        })
     }
 }
 
 if(searchForm) {
     [...searchForm].forEach(form => new Search(form))
 }
-
-// import React, {useEffect, useState} from 'react';
-// import {createRoot} from 'react-dom/client';
-// import {Paginator} from './search-paginator';
-
-// const searchForm = document.querySelector(".search")
-
-// const searchControl = document.querySelector(".search__control")
-// const searchInput = document.querySelector(".search__input")
-
-
-// const Searchresults = () => {
-//     const [query, setQuery] = useState("");
-//     const [page, setPage] = useState(1);
-//     const [data, setData] = useState(null);
-//     const [loading, setLoading] = useState(true)
-
-//     const handleQuery = (e) => {
-//         e.preventDefault()
-//         console.log("test")
-//         console.log(searchInput.value)
-//         setQuery(searchInput.value)
-//         setPage(1)
-//         // console.dir(e.target[0].value)
-//     }
-
-//     const handlePaginator = (e) => {
-//         if(e.target.value == "next") {
-//             setPage(page + 1)
-            
-//         } else if (e.target.value == "previous") {
-//             console.log(e.target.nextSibling)
-//             if(page > 1) {
-//                 setPage(page - 1)
-//             }
-//         }
-//     }
-
-//     const previousButton = () => {
-//         console.log(page)
-//         if(page > 1) {
-//             return (<button onClick={handlePaginator} value="previous">Prev</button>)
-//         }
-//         return (<button onClick={handlePaginator} value="previous" disabled>Prev</button>)
-
-//     }
-
-
-//     useEffect(() => {
-//         // setLoading(true)
-//         const fetchData = async () => {
-//             const response = await fetch(`https://world.openfoodfacts.org/cgi/search.pl?search_terms=${query}&page=${page}&page_size=30&action=process&json=1`);
-//             if (!response.ok) {
-//                 throw new Error("Network response was not ok");
-//             }
-//             setData(await response.json())
-//         }
-//         fetchData()
-//     }, [query, page])
-
-//     useEffect(() => {
-//         if(data == null) {
-//             return
-//         }
-//         setLoading(false);  
-//         searchControl.addEventListener("click", handleQuery)
-
-//         return () => {
-//             searchControl.removeEventListener("click", handleQuery)
-//         }
-//     }, [data]);
-
-
-//     if(loading){
-//         return <div>Loading...</div>
-//     }
-
-//     const names = () => {
-//     return data.products.map((product, i) => {return (<div key={i}>{product._id}:  </div>)})
-//     }
-
-//     console.log(data)
-
-//     return (<div>
-//         {names()}
-//         {Paginator(data.page_count ,data.count)}
-//         {/* <button onClick={handlePaginator} value="previous" disabled>Prev</button> */}
-//         {previousButton()}
-//         <button onClick={handlePaginator} value="next">Next</button>
-//     </div>)
-// }
-
-// if(resultsContainer){
-//     const root = createRoot(resultsContainer);
-//     root.render(<Searchresults />);
-// }
-
-
-// TO DO:
-// standaard query die producten filterd ofzo idk
-// Connectie maken met de databank van food.api
-// Producten tonen.
-// FIX paginator.
-// - Page = max // FIX PAGE + MAX => anders gaat pagina door naar Infinity
-// - Page == 1
-
-// ON QUERY CHANGE => set page = 1 (FIX double use)
-// 
-
-
-// Home pagina blobs
-// Detail pagina
-// 

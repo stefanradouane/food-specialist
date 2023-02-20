@@ -37,4 +37,32 @@
         height: 52px;
         display: flex;
     }
+
+    .icon{
+        &--loading{
+            display: none;
+        }
+
+        &--search{
+            display: block;
+        }
+    }
+
+
+
+    &--loading{
+        .result{
+            background-color: #e5e5e5;
+        }
+
+        .icon{
+            &--loading{
+                display: block;
+            }
+
+            &--search{
+                display: none;
+            }
+        }
+    }
 }

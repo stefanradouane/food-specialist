@@ -1,6 +1,11 @@
 .paginator{
     display: flex;
     gap: 5px;
+    margin: auto;
+    
+    @include laptop{
+        margin: 16px auto 0;
+    }
 
     &__control{
         cursor: pointer;

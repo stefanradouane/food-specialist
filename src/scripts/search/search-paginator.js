@@ -1,19 +1,260 @@
-import React, {useEffect, useState} from 'react';
-
-export const Paginator = (pagesize, count) => {
-    const pages = () => {
-        console.log(pagesize)
-        console.log(count)
-        const calculatedCount = Math.ceil(count / pagesize);
-        console.log(calculatedCount)
-        return calculatedCount
+export const paginatorSwitch = (item, search) => {
+    const removeListerens = () => {
+        search.searchPaginatorControl().forEach(item => {
+            item.parentNode.replaceChild(item.cloneNode(true), item);
+        })
     }
-    return (<div>
-        <div>1</div>
-        <div>2</div>
-        <div>3</div>
-        <div>totaal {count}</div>
-        <div>pagina's {pages()}</div>
-        <div>item's per pageina {pagesize}</div>
-    </div>)
+
+
+    switch (item.value) {
+
+        case "previous":
+            if(search.pageCount() == 1 ){
+                item.style.display = "none"
+            } else if ( search.page == 1) {
+                item.disabled = true   
+                item.style = ""   
+            }  else {                        
+                item.style = ""
+                item.removeAttribute("disabled") 
+                item.addEventListener("click", () => {
+                    removeListerens()
+                    const current = search.page
+                    search.page = current - 1;
+                    search.fetchData()
+                })
+            }
+          break;
+
+        case "next":
+            if(search.pageCount() == 1) {
+                item.disabled = "true"  
+                item.style.display = "none"
+            } else if (search.page == search.pageCount()){
+                item.style = ""
+                item.disabled = "true"  
+            } else {
+                item.style = ""
+                item.removeAttribute("disabled")
+                item.addEventListener("click", (e) => {
+                    console.log("next")
+                    removeListerens()
+                    const current = search.page
+                    search.page = current + 1;
+                    search.fetchData()
+                }) 
+            }
+          break;
+
+          case "first":
+            if(search.pageCount() == 1) {
+                item.textContent == "1"
+            } else if (search.page == "1") {
+                item.textContent = "1"
+                item.style = ""
+            } else {
+                item.removeAttribute("disabled")
+                item.addEventListener("click", (e) => {
+                    console.log("first")
+                    removeListerens()
+                    const current = search.page
+                    search.page = 1;
+                    search.fetchData()
+                }) 
+            }
+          break;
+
+          case "two":
+            if(search.pageCount() <= 2) {
+                item.style.display = "none"  
+            } else if (search.page >= 5) {
+                item.textContent = "..."
+                console.log(item)
+            } else if (search.page == "2") {
+                item.textContent = "2"
+                item.style = ""  
+            } else {
+                item.textContent = "2"
+                item.style = ""  
+                item.removeAttribute("disabled")
+                item.addEventListener("click", (e) => {
+                    console.log("second")
+                    removeListerens()
+                    const current = search.page
+                    search.page = 2;
+                    search.fetchData()
+                }) 
+            }
+          break;
+
+          case "three":
+            if(search.pageCount() <= 3) {
+                  item.style.display = "none"  
+            } else if (search.page == search.pageCount() || search.page == (search.pageCount() - 1) || search.page == (search.pageCount() - 2) || search.page == (search.pageCount() - 3)) {
+                item.textContent = search.pageCount() - 4
+                item.style = ""  
+                item.removeAttribute("disabled")
+                item.addEventListener("click", (e) => {
+                    console.log("six")
+                    removeListerens()
+                    const current = search.page
+                    search.page = search.pageCount() - 4;
+                    search.fetchData()
+                })
+            } else if (search.page >= 5) {
+                item.style = ""  
+                item.textContent = search.page - 1
+
+                item.addEventListener("click", (e) => {
+                    console.log("second")
+                    removeListerens()
+                    const current = search.page
+                    search.page = current - 1;
+                    search.fetchData()
+                })
+            } else if (search.page == "3") {
+                item.textContent = "3"
+                item.style = ""  
+            } else {
+                item.textContent = "3"
+                item.style = ""  
+                item.removeAttribute("disabled")
+                item.addEventListener("click", (e) => {
+                    console.log("third")
+                    removeListerens()
+                    const current = search.page
+                    search.page = 3;
+                    search.fetchData()
+                }) 
+            }
+          break;
+
+          case "four":
+            if(search.pageCount() <= 4) {
+                  item.style.display = "none"  
+            } else if (search.page == search.pageCount() || search.page == (search.pageCount() - 1) || search.page == (search.pageCount() - 2) || search.page == (search.pageCount() - 3)) {
+                item.textContent = search.pageCount() - 3
+                item.style = ""  
+                item.removeAttribute("disabled")
+                item.addEventListener("click", (e) => {
+                    console.log("six")
+                    removeListerens()
+                    const current = search.page
+                    search.page = search.pageCount() - 3;
+                    search.fetchData()
+                })
+            } else if (search.page == (search.pageCount() - 3)) {
+                item.textContent = search.pageCount() - 3
+                item.style = ""  
+            } else if (search.page >= 5) {
+                item.style = ""  
+                item.textContent = search.page
+            } else {
+                item.textContent = "4"
+                item.style = ""  
+                item.removeAttribute("disabled")
+                item.addEventListener("click", (e) => {
+                    console.log("fourth")
+                    removeListerens()
+                    const current = search.page
+                    search.page = 4;
+                    search.fetchData()
+                }) 
+            }
+          break;
+
+          case "five":
+            if(search.pageCount() <= 5) {
+                  item.style.display = "none"  
+            } else if (search.page == search.pageCount() || search.page == (search.pageCount() - 1) || search.page == (search.pageCount() - 2) || search.page == (search.pageCount() - 3)) {
+                item.textContent = search.pageCount() - 2
+                item.style = ""  
+                item.removeAttribute("disabled")
+                item.addEventListener("click", (e) => {
+                    console.log("six")
+                    removeListerens()
+                    const current = search.page
+                    search.page = search.pageCount() - 2;
+                    search.fetchData()
+                })
+            } else if (search.page == (search.pageCount() - 2)) {
+                item.textContent = search.pageCount() - 2
+                item.style = ""  
+            } else if (search.page >= 5) {
+                item.style = ""  
+                item.textContent = search.page + 1
+
+                item.addEventListener("click", (e) => {
+                    console.log("second")
+                    removeListerens()
+                    const current = search.page
+                    search.page = current + 1;
+                    search.fetchData()
+                })
+            } else {
+                item.textContent = "5"
+                item.style = ""  
+                item.removeAttribute("disabled")
+                item.addEventListener("click", (e) => {
+                    console.log("fourth")
+                    removeListerens()
+                    const current = search.page
+                    search.page = 5;
+                    search.fetchData()
+                }) 
+            }
+          break;
+
+          case "six":
+              if(search.pageCount() <= 6) {
+                item.style.display = "none"  
+              } else if (search.pageCount() == search.page) {
+                item.style = ""
+                item.textContent = search.page - 1
+                item.style = ""  
+                item.removeAttribute("disabled")
+                item.addEventListener("click", (e) => {
+                    console.log("fourth")
+                    removeListerens()
+                    const current = search.page
+                    search.page = search.pageCount() - 1;
+                    search.fetchData()
+                }) 
+            } else if (search.page == (search.pageCount() - 2) || search.page == (search.pageCount() - 3)) {
+                item.textContent = search.pageCount() - 1
+                item.style = ""  
+                item.removeAttribute("disabled")
+                item.addEventListener("click", (e) => {
+                    console.log("six")
+                    removeListerens()
+                    const current = search.page
+                    search.page = search.pageCount() - 1;
+                    search.fetchData()
+                }) 
+              } else if (search.page == (search.pageCount() - 1)) {
+                item.textContent = search.pageCount() - 1
+                item.style = ""  
+              } else {
+                item.style = ""  
+                item.textContent = "..."
+                } 
+            break;
+
+ 
+        case "last":
+            if(search.pageCount() == 1) {
+                item.style.display = "none"   
+            }
+
+            item.addEventListener("click", (e) => {
+                removeListerens()
+                const current = search.pageCount()
+                search.page = current;
+                search.fetchData()
+            })
+
+            item.textContent = search.pageCount()
+          break;
+        
+    }
 }

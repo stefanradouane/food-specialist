@@ -13,4 +13,27 @@
         width: 20px;
         fill: $white-color;
     }
+
+    &--loading{
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        border: 5px solid white;
+        border-top-color:transparent;
+        animation: rotate 1s linear infinite;
+    }
+
+    &--search{
+        width: 30px;
+        height: 30px;
+    }
+}
+
+@keyframes rotate {
+    0%{
+        transform: rotate(0deg);
+    }
+    100%{
+        transform: rotate(360deg);
+    }
 }

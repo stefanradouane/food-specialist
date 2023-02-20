@@ -1,10 +1,11 @@
 .page{
-    @include responsive(padding,20px 16px 16px, 42px, 42px, 42px 84px);
+    @include responsive(padding,0 16px 16px, 0 42px 42px,0 42px 42px, 0 84px 42px);
+    @include responsive(margin,20px auto 0, 42px auto 0, 42px auto 0, 42px auto 0);
+    @include responsive(height, calc(100vh - 52px - 20px), calc(100vh - 52px - 42px), calc(100vh - 52px - 42px), calc(100vh - 52px - 42px));
+    @include responsive(height, calc(100dvh - 52px - 20px), calc(100dvh - 52px - 42px), calc(100dvh - 52px - 42px), calc(100dvh - 52px - 42px));
     max-width: 1440px;
-    margin: auto;
     display: flex;
     gap: 20px;
     flex-direction: column;
-    height: calc(100vh - 52px);
-    height: calc(100dvh - 52px);
+    overflow: hidden;
 }

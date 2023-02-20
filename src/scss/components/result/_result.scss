@@ -1,5 +1,4 @@
 .result{
-    margin-top: 20px;
     display: grid;
     grid-template-columns: 20% 1fr;
     grid-template-rows: auto 1fr;
@@ -45,7 +44,7 @@
 
         &__image{
             width:50%;
-            max-width: 350px;
+            max-width: 200px;
             mix-blend-mode: color-burn;
         }
     }

@@ -1,0 +1,18 @@
+.collapsible-header{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: baseline;
+    transition: 400ms all;
+    
+    h2{
+        // transition: 400ms all;
+        overflow: hidden;
+        height: auto;
+    }
+
+    &--scrolled{
+        transform: translateY(-100%);
+        margin-bottom: -110px;
+    }
+}
