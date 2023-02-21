@@ -1,13 +1,13 @@
 import {paginatorSwitch} from './search-paginator'
 import {detailPage} from '../detailpage/detailpage'
+import {getData} from '../api/getdata'
+
 
 const baseEndpoint = 'https://nl.openfoodfacts.org/cgi/search.pl?search_terms=&json=true'
 const searchForm = document.querySelectorAll(".search")
 
 
-const apiEndpoint = (query, page, pageSize) => {
-    return `https://nl.openfoodfacts.org/cgi/search.pl?search_terms=${query}&page=${page}&page_size=${pageSize}&json=true`
-}
+
 
 class Search {
     constructor(node) {
@@ -62,12 +62,8 @@ class Search {
         this.node.classList.add("search--loading")
         this.searchControl().disabled = true
         const fetchExec = async () => {
-            const response = await fetch(apiEndpoint(this.query, this.page, this.pageSize));
-            if (!response.ok) {
-                throw new Error("Network response was not ok");
-            }
-
-            this.data = await response.json();
+            const response = await getData("all", this.query, this.page, this.pageSize);
+            this.data = response
             this.render()
         }
 
