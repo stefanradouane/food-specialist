@@ -1,6 +1,11 @@
 import {getData} from '../api/getdata'
+import {parseQuery, resolveQuery, serializeParams, setUrl} from '../url/url'
 
-export const detailPage = async (itemId) => {
+
+export const detailPage = async (itemId, search, popState) => {
+    if(!popState){
+        setUrl(search, itemId)
+    }
     const detailModal = document.querySelector(".detailpage")
     const detailModalImage = document.querySelector(".detailpage__image")
     const detailModalTitle = document.querySelector(".detailpage__title")
@@ -17,6 +22,15 @@ export const detailPage = async (itemId) => {
         productQuantity.textContent = product.quantity
         detailModalImage.src = product.image_front_url ? product.image_front_url : "public/assets/images/eaten-apple.png"
         productIngredients.textContent = product.ingredients_text_nl ? product.ingredients_text_nl : product.ingredients_text_en ? product.ingredients_text_en : product.ingredients_text
+
+
+        const nutriScore = document.createElement("img")
+        nutriScore.classList.add("detailpage__nutriscore")
+        nutriScore.src = `https://static.openfoodfacts.org/images/attributes/nutriscore-${product.nutriscore_grade ? product.nutriscore_grade : "unknown"}.svg`
+
+        detailModal.appendChild(nutriScore)
+
+
         
         const nutrimentsTable = () => {
             if(!product.nutriments){
@@ -183,7 +197,13 @@ export const detailPage = async (itemId) => {
 
     const control = document.querySelector(".detailpage__control");
 
+
+
     control.addEventListener("click", () => {
+        setUrl(search);
+        if(search){
+            search.id = ""
+        }
         detailModal.ariaExpanded = "false"
     })
 }

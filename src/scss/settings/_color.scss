@@ -2,6 +2,7 @@
 :root {
     --prim-color: rgb(0, 255, 0);
     --sec-color: rgb(0, 200, 0);
+    --text-color:#f3f3f3;
 }
 
 /* Display-P3 color, when supported. */
@@ -11,6 +12,8 @@
         --prim-color: color(display-p3 0.2 0.702 0.2 / 1);
     }
 }
+
+$text-color:var(--text-color);
 
 $prim-color: var(--prim-color);
 $sec-color: var(--sec-color);
@@ -23,4 +26,4 @@ $black-color: #000;
 $white-color: #fff;
 
 $grey-color: #E5E5E5;
-$dark-grey-color: #B7B7B7;
+$dark-grey-color: #202124;

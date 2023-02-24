@@ -7,6 +7,7 @@
     transform: translateX(-100%);
     border: none;
     transition: 200ms all;
+    background-color: $dark-grey-color;
     
     &[aria-expanded="true"]{
         transform: translateX(0%);

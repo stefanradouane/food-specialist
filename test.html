@@ -10,62 +10,63 @@
 </head>
 <body>
 
-    <a href="/author">Barcode</a>
-    <a href="/books">Product</a>
+    <a href="/barcode">Barcode</a>
+    <a href="/product">Product</a>
     <a href="/">Home</a>
     <a href="#test">This text will be overwritten</a>
     <button>This text will be overwritten</button>
     <button class="back-button">Back</button>
 
     <script>
+    //     console.log(window.location)
 
-      var author = function () { console.log("author"); };
-      var books = function () { console.log("books"); };
-      var viewBook = function (bookId) {
-        console.log("viewBook: bookId is populated: " + bookId);
-      };
+    //   var author = function () { console.log("author"); };
+    //   var books = function () { console.log("books"); };
+    //   var viewBook = function (bookId) {
+    //     console.log("viewBook: bookId is populated: " + bookId);
+    //   };
 
-      var routes = {
-        '/author': author,
-        '/books': [books, function() {
-          console.log("An inline route handler.");
-        }],
-        '/books/view/:bookId': viewBook
-      };
+    //   var routes = {
+    //     '/author': author,
+    //     '/books': [books, function() {
+    //       console.log("An inline route handler.");
+    //     }],
+    //     '/books/view/:bookId': viewBook
+    //   };
 
-      var router = Router(routes);
+    //   var router = Router(routes);
 
-      router.init();
+    //   router.init();
 
-// const routes = {
-//   '/': 'home',
-//   '/barcode': 'barcode',
-//   '/product': 'product'
-// };
+const routes = {
+  '/': 'home',
+  '/barcode': 'barcode',
+  '/product': 'product'
+};
 
-// function handleRouteChange(route) {
-//   // Update the content section based on the current route
-//   console.log(`Current route is ${route}`);
-// }
+function handleRouteChange(route) {
+  // Update the content section based on the current route
+  console.log(`Current route is ${route}`);
+}
 
-// document.addEventListener('DOMContentLoaded', function () {
-//   // Handle clicks on links
-//   document.addEventListener('click', function (event) {
-//   if (event.target.matches('a')) {
-//     event.preventDefault();
-//     const href = event.target.getAttribute('href');
-//     if (routes[href] && href !== location.pathname) {
-//       const url = new URL(href, location.origin);
-//       history.pushState(null, null, url);
-//       handleRouteChange(routes[href]);
-//     }
-//   }
-//     })
-//   // Handle back and forward buttons
-//   window.addEventListener('popstate', function () {
-//     handleRouteChange(routes[location.pathname]);
-//   });
-// });
+document.addEventListener('DOMContentLoaded', function () {
+  // Handle clicks on links
+  document.addEventListener('click', function (event) {
+  if (event.target.matches('a')) {
+    event.preventDefault();
+    const href = event.target.getAttribute('href');
+    if (routes[href] && href !== location.pathname) {
+      const url = new URL(href, location.origin);
+      history.pushState(null, null, url);
+      handleRouteChange(routes[href]);
+    }
+  }
+    })
+  // Handle back and forward buttons
+  window.addEventListener('popstate', function () {
+    handleRouteChange(routes[location.pathname]);
+  });
+});
 // In this script, the DOMContentLoaded event is used to ensure that the DOM is loaded before the script runs. The handleRouteChange function is defined to update the content section of your website based on the current route. The routes object maps the different states of your website to routes. The click event is handled to change the current route using the History API, and the popstate event is used to handle back and forward buttons.
 
 

@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,300;0,400;0,700;1,300;1,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="public/dist/css/all.css">
+    <meta name="theme-color" content="#000000">
 </head>
 <body>
     <dialog class="home" aria-expanded="false"> <!-- CHANGE TO TRUE -->
@@ -82,7 +83,9 @@
                 </button>
             </form>
             <p class="search__count">Totaal: 0 items</p>
-            <section class="search__results"></section>
+            <section class="search__results">
+                <div class="icon icon--loading icon--loading-results"></div>
+            </section>
             <section class="paginator">
                 <button class="paginator__control" value="previous">&lt;</button>
 
@@ -118,7 +121,7 @@
         </button>
     </dialog>
 
-    <dialog class="barcode" aria-expanded="true"> <!-- CHANGE to false -->
+    <dialog class="barcode" aria-expanded="false"> <!-- CHANGE to false -->
         <h2 class="title title--h1">Scan een barcode</h2>
         <section class="barcode__observer">
             <video class="barcode__video"></video>
@@ -150,7 +153,6 @@
 
 
     </dialog>
-
     <script src="./public/dist/scripts/main.js"></script>
 </body>
 </html>

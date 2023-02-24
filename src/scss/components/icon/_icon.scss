@@ -21,6 +21,10 @@
         border: 5px solid white;
         border-top-color:transparent;
         animation: rotate 1s linear infinite;
+        
+        &-results{
+            animation: rotate-centered 1s linear infinite;
+        }
     }
 
     &--search{
@@ -35,5 +39,14 @@
     }
     100%{
         transform: rotate(360deg);
+    }
+}
+
+@keyframes rotate-centered {
+    0%{
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+    100%{
+        transform: translate(-50%, -50%) rotate(360deg);
     }
 }

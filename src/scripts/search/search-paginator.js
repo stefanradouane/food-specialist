@@ -180,15 +180,16 @@ export const paginatorSwitch = (item, search) => {
             } else if (search.page == (search.pageCount() - 2)) {
                 item.textContent = search.pageCount() - 2
                 item.style = ""  
-            } else if (search.page >= 5) {
+            } else if (search.page >= 6) {
                 item.style = ""  
-                item.textContent = search.page + 1
+                item.textContent = parseInt(search.page) + 1
 
                 item.addEventListener("click", (e) => {
                     console.log("second")
                     removeListerens()
                     const current = search.page
-                    search.page = current + 1;
+                    console.log(current)
+                    search.page = parseInt(current) + 1;
                     search.fetchData()
                 })
             } else {
@@ -242,16 +243,18 @@ export const paginatorSwitch = (item, search) => {
 
  
         case "last":
-            if(search.pageCount() == 1) {
+            if(search.pageCount() <= 7) {
                 item.style.display = "none"   
+            } else {
+                item.style = ""
+                item.addEventListener("click", (e) => {
+                    removeListerens()
+                    const current = search.pageCount()
+                    search.page = current;
+                    search.fetchData()
+                })
             }
 
-            item.addEventListener("click", (e) => {
-                removeListerens()
-                const current = search.pageCount()
-                search.page = current;
-                search.fetchData()
-            })
 
             item.textContent = search.pageCount()
           break;

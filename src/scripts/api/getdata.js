@@ -4,7 +4,7 @@ export const getData = (type, query, page, pageSize) => {
             return `https://nl.openfoodfacts.org/api/v0/product/${query}.json`
 
         } else if (type == "all") {
-            return `https://nl.openfoodfacts.org/cgi/search.pl?search_terms=${query}&page=${page}&page_size=${pageSize}&json=true`
+            return `https://nl.openfoodfacts.org/cgi/search.pl?search_terms=${query}&page=${page}&page_size=${pageSize ? pageSize : 30}&json=true`
         }
     }
 

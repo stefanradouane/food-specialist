@@ -1,23 +1,22 @@
 import {paginatorSwitch} from './search-paginator'
 import {detailPage} from '../detailpage/detailpage'
 import {getData} from '../api/getdata'
+import {parseQuery, setUrl} from '../url/url'
 
+import {searchResults} from './search-results'
 
-const baseEndpoint = 'https://nl.openfoodfacts.org/cgi/search.pl?search_terms=&json=true'
 const searchForm = document.querySelectorAll(".search")
-
-
-
 
 class Search {
     constructor(node) {
         this.loading = true;
         this.node = node;
         this.data = null;
-        this.query = "";
-        this.page = 1;
+        this.query = parseQuery(window.location).q || "";
+        this.page = parseQuery(window.location).page || 1;
+        this.id = parseQuery(window.location).id || "";
+
         this.pageSize = 30;
-        this.pages = 1;
         this.init()
     }
 
@@ -32,11 +31,12 @@ class Search {
             if(this.query !== this.searchInput().value) {
                 // If changed, change query and fetch data again
                 this.query = this.searchInput().value;
+                // Set page to 1.
                 this.page = 1;
                 // Prevent paginator listeners to duplicate on query change.
                 this.removeListerens()
                 // Fetch data
-                this.fetchData()
+                this.fetchData(false, true, false)
             }
         })
 
@@ -49,25 +49,64 @@ class Search {
                 this.collapsibleHeader().classList.add("collapsible-header--scrolled")
             }
         })
+
+        window.addEventListener("popstate", (e) => {
+            console.log(e.state)
+            // this.searchInput().value = this.query;
+            if(!e.state.barcode){
+                this.fetchData(e.state, false, false)
+            } else {
+                detailPage(e.state.barcode, this, true)
+            }
+        })
     }
 
     init() {
-        this.fetchData()
+        // console.log(this)
+        this.searchInput().value = this.query;
         this.bindEvents()
+
+        if(this.id) {
+            detailPage(this.id, this)
+            this.fetchData(false, false, false)    
+        } else {
+            this.fetchData(false, true, false)
+        }
+
+        // Set query as value on input
     }
 
-    fetchData() {
+    fetchData(popState, onLoad, detailpage) {
+        if(onLoad){
+            setUrl(this)
+        } 
+
         this.loading = true;
         this.searchCount().textContent = "loading..."
         this.node.classList.add("search--loading")
         this.searchControl().disabled = true
-        const fetchExec = async () => {
-            const response = await getData("all", this.query, this.page, this.pageSize);
-            this.data = response
-            this.render()
+        if(popState) {
+            if(!detailpage){
+                const detailModal = document.querySelector(".detailpage")
+                detailModal.ariaExpanded = "false";
+            }
+
+            this.searchInput().value = popState.query;
+            const fetchExec = async () => {
+                const response = await getData("all", popState.query, popState.page, popState.pageSize);
+                this.data = response
+                this.render()
+            }
+            fetchExec()
+        } else {
+            const fetchExec = async () => {
+                const response = await getData("all", this.query, this.page, this.pageSize);
+                this.data = response
+                this.render()
+            }
+            fetchExec()
         }
 
-        fetchExec()
     }
 
     searchContainer() {
@@ -104,7 +143,6 @@ class Search {
 
 
     pageCount () {
-        const pages = this.pages;
         const pageSize = this.pageSize;
         const totalCount = this.data.count;
         const calculatedCount = Math.ceil(totalCount / pageSize) >= 150 ? 150 : Math.ceil(totalCount / pageSize)
@@ -132,14 +170,15 @@ class Search {
 
     renderItems () {
         // RESET CHILDREN
+        const loadingIcon = document.querySelector("div.icon.icon--loading.icon--loading-results").cloneNode(true)
         if(this.searchContainer().children.length){
             const array = Array.from(this.searchContainer().children)
             array.forEach(item => item.remove())
         }
 
+        // ERROR STATE : {O items}
         if(this.data.products.length == 0) {
             this.paginator().style.display = "none"
-
             const emptySection = document.createElement("section");
             emptySection.classList.add("result-empty")
             const title = document.createElement("h2")
@@ -155,32 +194,17 @@ class Search {
         } else {
             this.paginator().style = ""
             this.makePaginator()
-
-            const list = this.data.products.map(product => {
-                const itemContainer = document.createElement("section");
-                itemContainer.classList.add("result")
-                itemContainer.dataset.id = product._id
-                const itemImage = document.createElement("img");
-                itemImage.classList.add("result__image")
-                itemImage.src = product.image_front_url ? product.image_front_url : "public/assets/images/eaten-apple.png"
-                const item = document.createElement("h2")
-                item.classList.add("result__title")
-                item.textContent = product.product_name;
-                const itemContent = document.createElement("p")
-                itemContent.classList.add("result__info")
-                itemContent.textContent = `Proteine ${product.nutriments.proteins}${product.nutriments.proteins_unit} Totaal, ${product.nutriments.proteins_100g}${product.nutriments.proteins_unit} / 100${product.nutriments.proteins_unit}`;
-                itemContainer.appendChild(itemImage) 
-                itemContainer.appendChild(item) 
-                itemContainer.appendChild(itemContent) 
-                return itemContainer
-            })
-
-            list.forEach(item => {
+            searchResults(this.data.products)
+            .forEach(item => {
                 this.searchContainer().appendChild(item)
                 item.addEventListener("click", (e) => {
-                    this.showModal(e)
+                    let id = e.target.nodeName !== "SECTION" ? e.target.parentNode.dataset.id : e.target.dataset.id
+                    // setUrl(this, id)
+                    detailPage(id, this)
                 })
             })
+
+            this.searchContainer().appendChild(loadingIcon)
         }
     }
 
@@ -197,12 +221,6 @@ class Search {
 
 
 
-    }
-
-    showModal(e){
-        let target = e.target.nodeName !== "SECTION" ? e.target.parentNode.dataset.id : e.target.dataset.id
-
-        detailPage(target)
     }
 
     // Function for the paginator to replace each item
