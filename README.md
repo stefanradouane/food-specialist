@@ -6,10 +6,10 @@ Ik heb mijn single page web applicatie (SPA) gemaakt op de Open-Food-Facts API. 
 
 De eerste les was het de bedoeling dat we de applicatie gingen uitschetsen en hier een breakdownschets van maken. Ik heb gedaan, mijn uiteindelijke schets ziet er zo uit:
 
-<img src="public/assets/process-images/v0-schets-1.png"
+<img src="public/assets/process-images/v0-schets-1.jpeg"
      alt="breakdownschets - 1"
      style="width: 45%;"/>
-<img src="public/assets/process-images/v0-schets-2.png"
+<img src="public/assets/process-images/v0-schets-2.jpeg"
      alt="breakdownschets - 2"
      style="width: 45%;"/>
 
@@ -24,7 +24,7 @@ Na het maken van de breakdown schets ging ik gelijk coderen. Ik heb de eerste we
 
 Vervolgens was het de bedoeling om states toe te voegen aan de app. Ik heb deze states eerst uitgeschetst en vervolgens verwerkt in mijn concept. De schetsen zien er als volgt uit:
 
-<img src="public/assets/process-images/states-schets.jpeg"
+<img src="public/assets/process-images/states-schets-1.jpeg"
      alt="states schets"
      style="width: 45%;"/>
 <img src="public/assets/process-images/states-diagram.jpeg"
@@ -42,7 +42,7 @@ Vervolgens heb ik dit verwerkt in mijn concept:
 
 Het was ook de bedoeling dat we met de barcode API een product konden zoeken. Ik heb eerst een schets gemaakt hoe ik deze pagina eruit wil laten zien. Deze schets zag er als volgt uit:
 
-<img src="public/assets/process-images/barcode-schets.png"
+<img src="public/assets/process-images/barcode-schets.jpeg"
      alt="barcode schets"
      style="width: 45%;"/>
 
@@ -68,7 +68,7 @@ teruglaad uit de opgeslagen cache.
 
 Na alles te hebben geimplementeerd was het voor mij de tijd om alles helemaal fancy en mooi te maken. Ik heb uiteindelijk voor de search results een nieuwe schets gemaakt, en ook voor de detailpagina's. Daarnaast heb ik ook nog een aantal extra features toegevoegd.
 
-<img src="public/assets/process-images/last-.jpeg"
+<img src="public/assets/process-images/last-1.jpeg"
      alt="last schets 1"
      style="width: 20%;"/>
 <img src="public/assets/process-images/last-2.jpeg"
