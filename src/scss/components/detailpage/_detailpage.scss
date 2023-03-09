@@ -1,24 +1,21 @@
 .detailpage{
-    @include responsive(padding, 1em, 42px, 42px, 84px);
+    @include responsive(padding, 1em, 42px, 42px, 42px 84px);
+    @include body;
+    @include body--small;
     display: block;
     inset: 52px 0 0 0;
     width: 100%;
     height: calc(100% - 52px);
-    // padding: 1em;
     transform: translateX(-100%);
     border: none;
     transition: 200ms all;
     background-color: $dark-grey-color;
-    @include body;
-    @include body--small;
 
     > section {
         display: flex;
-        //  flex-direction: column;
         align-items: baseline;
         flex-wrap: wrap;
         gap: 5px 10px;
-        // width: 80%;
         max-width: 1272px;
         margin: auto;
 
@@ -30,8 +27,8 @@
             grid-template-areas: "image content"
             "table content";
             align-items: unset;
-
             gap: 20px 40px;
+
         }
         
         @include desktop{
@@ -47,7 +44,6 @@
         grid-area: content;
         display: contents;
         flex-wrap: wrap;
-        // flex-direction: column;
         gap: 10px;
         align-items: baseline;
         max-width: 800px;
@@ -73,17 +69,11 @@
 
     &__image{
         grid-area: image;
-        // height: 100%;
-        // max-width: 300px;
         height: 50vw;
         max-height: 250px;
         width: calc(100% - 60px);
         object-fit: contain;
         object-position: top left;
-
-        @include laptop{
-            max-height: 300px;
-        }
     }
 
     &__table{
@@ -125,7 +115,6 @@
         display: flex;
         align-items: center;
         gap: 10px;
-        // width: 100%;
         padding: .5em;
         background-color: #272832;
         border-radius: 10px;
@@ -167,9 +156,4 @@
         align-items: center;
         border: none;   
     }
-
-    // &__image{
-        // 
-    // }
-
 }
