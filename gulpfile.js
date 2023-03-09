@@ -3,13 +3,8 @@ const sass = require('gulp-sass')(require('sass'));
 const prefix = require('gulp-autoprefixer');
 const minify = require('gulp-clean-css');
 const leec = require('gulp-line-ending-corrector');
-
 const concat = require('gulp-concat');
 const sourceMaps = require('gulp-sourcemaps');
-
-const uglify = require('gulp-uglify');
-
-// const babel = require('gulp-babel');
 
 const paths = {
   styles: {

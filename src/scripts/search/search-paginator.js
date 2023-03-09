@@ -1,14 +1,16 @@
 export const paginatorSwitch = (item, search) => {
+    // Reset buttons
     const removeListerens = () => {
         search.searchPaginatorControl().forEach(item => {
             item.parentNode.replaceChild(item.cloneNode(true), item);
         })
     }
 
+    // Paginator switch
     switch (item.value) {
         case "previous":
             if(search.pageCount() == 1 ){
-                item.style.display = "none"
+                item.style.display = "none" 
             } else if ( search.page == 1) {
                 item.disabled = true   
                 item.style = ""   

@@ -2,7 +2,6 @@ import {paginatorSwitch} from './search-paginator'
 import {detailPage} from '../detailpage/detailpage'
 import {getData} from '../api/getdata'
 import {parseQuery, setUrl} from '../url/url'
-
 import {searchResults} from './search-results'
 
 const searchForm = document.querySelectorAll(".search")
@@ -40,6 +39,7 @@ class Search {
             }
         })
 
+        // Make the header collapse
         this.searchContainer().addEventListener("scroll", (e) => {
             if(this.collapsibleHeader().classList.contains("collapsible-header--scrolled")){
                 if(e.target.scrollTop == 0){
@@ -50,9 +50,8 @@ class Search {
             }
         })
 
+        // show detailpage or load data
         window.addEventListener("popstate", (e) => {
-            console.log(e.state)
-            // this.searchInput().value = this.query;
             if(!e.state.barcode){
                 this.fetchData(e.state, false, false)
             } else {
@@ -62,46 +61,62 @@ class Search {
     }
 
     init() {
-        // console.log(this)
+        // Set a value on the search input
         this.searchInput().value = this.query;
+        // Bind events
         this.bindEvents()
 
+        // If id open detail page
         if(this.id) {
             detailPage(this.id, this)
+            // Fetch data for later
             this.fetchData(false, false, false)    
         } else {
+            // Fetch data
             this.fetchData(false, true, false)
         }
-
-        // Set query as value on input
     }
 
+    // Fetch data
     fetchData(popState, onLoad, detailpage, paginator) {
+        // if loading or onclick of the paginator
         if(onLoad || paginator){
             setUrl(this)
         } 
 
+        // Loading
         this.loading = true;
         this.searchCount().textContent = "loading..."
+        // Show loading icon
         this.node.classList.add("search--loading")
+        // Disable the button
         this.searchControl().disabled = true
+
         if(popState) {
             if(!detailpage){
+                // Close modal
                 const detailModal = document.querySelector(".detailpage")
                 detailModal.ariaExpanded = "false";
             }
 
+            // Set query on search input 
             this.searchInput().value = popState.query;
+            // Fetch data
             const fetchExec = async () => {
                 const response = await getData("all", popState.query, popState.page, popState.pageSize);
+                // Set data
                 this.data = response
+                // Time to render
                 this.render()
             }
             fetchExec()
         } else {
+            // Fetch direct
             const fetchExec = async () => {
                 const response = await getData("all", this.query, this.page, this.pageSize);
+                // Set data
                 this.data = response
+                // Time to render
                 this.render()
             }
             fetchExec()
@@ -109,6 +124,7 @@ class Search {
 
     }
 
+    // Getters
     searchContainer() {
         return this.node.querySelector(".search__results")
     }
@@ -141,7 +157,7 @@ class Search {
         return document.querySelector(".collapsible-header")
     }
 
-
+    // Total amount of pages
     pageCount () {
         const pageSize = this.pageSize;
         const totalCount = this.data.count;
@@ -149,21 +165,22 @@ class Search {
         return calculatedCount;
     }
 
-
     render() {
         if(this.data != null) {
+            // Loading = false
             this.loading = false;
             this.node.classList.remove("search--loading")
             this.searchControl().removeAttribute("disabled")
 
+            // Set total amount of instances
             if(this.data.count){
                 this.searchCount().textContent =  `Totaal: ${this.data.count} items`;
             } else {
                 this.searchCount().textContent =  `Totaal: 0 items`;
             }
             this.renderItems();
-            console.log(this.data)
         } else {            
+            // Still loading
             this.searchCount().textContent = "loading..."
         }
     }
@@ -179,7 +196,9 @@ class Search {
 
         // ERROR STATE : {O items}
         if(this.data.products.length == 0) {
+            // remove paginator
             this.paginator().style.display = "none"
+            // Make empty section
             const emptySection = document.createElement("section");
             emptySection.classList.add("result-empty")
             const title = document.createElement("h2")
@@ -193,24 +212,29 @@ class Search {
             emptySection.appendChild(image)
             this.searchContainer().appendChild(emptySection)
         } else {
+            // Make paginator
             this.paginator().style = ""
             this.makePaginator()
+            // show results
             searchResults(this.data.products)
             .forEach(item => {
                 this.searchContainer().appendChild(item)
+                // Add listener
                 item.addEventListener("click", (e) => {
                     let id = e.target.nodeName !== "SECTION" ? e.target.parentNode.dataset.id : e.target.dataset.id
-                    // setUrl(this, id)
                     detailPage(id, this)
                 })
             })
 
+            // Append loading icon
             this.searchContainer().appendChild(loadingIcon)
         }
     }
 
+    // Make paginator
     makePaginator() {
         this.searchPaginatorControl().forEach(item => {  
+            // Paginator switch
             paginatorSwitch(item, this);
 
             // Reset active class every page button
@@ -219,9 +243,6 @@ class Search {
                 item.classList.add("paginator__control--active")
             }
         })
-
-
-
     }
 
     // Function for the paginator to replace each item
@@ -233,6 +254,7 @@ class Search {
     }
 }
 
+// Start!
 if(searchForm) {
     [...searchForm].forEach(form => new Search(form))
 }

@@ -1,6 +1,6 @@
 import {getData} from '../api/getdata'
-import {parseQuery, resolveQuery, serializeParams, setUrl} from '../url/url'
-import {flag} from 'country-emoji'
+import {setUrl} from '../url/url'
+import {flag} from 'country-emoji' // Only library used to prevent a lot of time making a dictionary for all the country flags
 
 export const detailPage = async (itemId, search, popState) => {
     // If page is loaded set url.
@@ -30,7 +30,7 @@ export const detailPage = async (itemId, search, popState) => {
     // If product found
     if(productInfo) {
         const product = productInfo.product
-        console.log(product)
+        // make page
         detailPage.ariaExpanded = "true"
         detailPageTitle.textContent = product?.product_name
         detailPageBrand.textContent = product.brands
@@ -44,6 +44,7 @@ export const detailPage = async (itemId, search, popState) => {
         detailPageNovaScore.src = `https://static.openfoodfacts.org/images/attributes/nova-group-${product.nova_group ? product.nova_group : "unknown"}.svg`
         detailPageEcoScore.src = `https://static.openfoodfacts.org/images/attributes/ecoscore-${product.ecoscore_grade ? product.ecoscore_grade : "unknown"}.svg`
 
+        // Make alergie list
         function allergieList (list) {
             let returnedValue = "Allergenen: ";
             if(list.length == 0){
@@ -63,12 +64,14 @@ export const detailPage = async (itemId, search, popState) => {
             return returnedValue
         }
 
+        // Make an emoji list for the countries
         function countryList (list) {
             let returnedObject = document.createElement("span");
 
             list.forEach((item,) => {
                 const words = item.split(":")
                 if(words[1].includes("-")){
+                    // Only library :)
                     const countryFlag = flag(words[1].replaceAll("-", " "));
                     returnedObject.textContent += countryFlag + " "
                 } else {
@@ -80,9 +83,11 @@ export const detailPage = async (itemId, search, popState) => {
 
         }
 
+        // Show barcode
         detailPageBarcode.textContent = "Barcode: " +  `${product._id ? product._id : "Onbekend"}`
 
 
+        // Set protein icon
         if(isNaN(product.nutriments.proteins_100g)){
             detailPageProtein.textContent = "Eiwitten onbekend"
         } else {
@@ -90,6 +95,7 @@ export const detailPage = async (itemId, search, popState) => {
         }
 
         
+        // Make nutriments table
         const nutrimentsTable = () => {
             if(!product.nutriments){
                 return 
@@ -127,6 +133,7 @@ export const detailPage = async (itemId, search, popState) => {
                     tableItem3.style.display = "none"                    
                 }
                 
+                // Switch for the nutriment table
                 switch (nutriment) {
                     case "Energie":
                         if(!isNaN(product.nutriments["energy-kj_100g"]) || !isNaN(product.nutriments.energy)){
@@ -239,14 +246,15 @@ export const detailPage = async (itemId, search, popState) => {
             detailPageTable.children[0].remove()
         }
 
+        // Append table
         detailPageTable.appendChild(nutrimentsTable())
     }
 
+    // close detail page
     const control = document.querySelector(".detailpage__control");
 
-
-
     control.addEventListener("click", () => {
+        // Clear URL
         setUrl(search);
         if(search){
             search.id = ""

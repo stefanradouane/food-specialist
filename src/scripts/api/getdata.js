@@ -1,4 +1,12 @@
+/**
+ * Get data from the API based on the variables
+ * @param {String} type defines the endpoint
+ * @param {String} query search params
+ * @param {Number} page current page
+ * @param {Number} pageSize amount of instances
+ */
 export const getData = (type, query, page, pageSize) => {
+    // Return the API endpoint with the variables
     const apiEndpoint = (type, query, page, pageSize) => {
         if(type == "detail") {
             return `https://nl.openfoodfacts.org/api/v0/product/${query}.json`
@@ -8,6 +16,7 @@ export const getData = (type, query, page, pageSize) => {
         }
     }
 
+    // Fetch data from the API
     const fetchExec = async (atype, hoi, page, pageSize) => {
         const response = await fetch(apiEndpoint(atype, hoi, page, pageSize));
         if (!response.ok) {
@@ -17,5 +26,6 @@ export const getData = (type, query, page, pageSize) => {
         return await response.json();
     }
 
+    // Start and return
     return fetchExec(type, query, page, pageSize)
 };

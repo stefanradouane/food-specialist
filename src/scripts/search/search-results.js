@@ -6,7 +6,6 @@
  * @returns {Array} of elements
  * Each item contains a:
  * Productname
- * Quantity
  * Image
  * Nutriscore
  * Proteinsection
@@ -21,7 +20,6 @@ export const searchResults = (data) => {
         
         // Create all elements
         const resultName = document.createElement("h2")
-        // const resultQuantity = document.createElement("p")
         const resultImg = document.createElement("img");
         const resultNutriScore = document.createElement("img")
         const resultProteinSection = document.createElement("section")
@@ -32,10 +30,6 @@ export const searchResults = (data) => {
         resultName.classList.add("title")
         resultName.classList.add("title--h3")
         resultName.textContent = product.product_name;
-
-        // Quantity
-        // resultQuantity.classList.add("result__quantity")
-        // resultQuantity.textContent = product.quantity;
 
         // Image
         resultImg.classList.add("result__image")
@@ -74,6 +68,6 @@ export const searchResults = (data) => {
         itemContainer.appendChild(resultNutriScore) 
         return itemContainer
     })
-    console.log(results)
+
     return results   
 }

@@ -3,8 +3,9 @@
 .cta{
     @include body;
     @include body--big;
+    cursor: pointer;
     font-size: 24px!important;
-    display: block;
+    display: flex;
     padding:14px 20px;
     background-color: var(--prim-color);
     transition: $transition-settings;
@@ -15,7 +16,20 @@
     text-align: center;
     border: none;
 
+    &--icon{
+        flex-direction: row;
+    }
+
+    &--no-padding{
+        padding: 0;
+    }
+
     &:hover{
         background-color: $hover-color;
+    }
+
+    &[disabled]:hover{
+        cursor: progress;
+        background-color: var(--prim-color);
     }
 }

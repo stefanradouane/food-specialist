@@ -1,7 +1,9 @@
 @import '../../node_modules/microscope-sass/lib/typography';
 
 .barcode{
-    display: block;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     transform: translateX(100%);
     transition: 300ms all;
     inset: 52px 0 0 0;
@@ -9,31 +11,31 @@
     width: 100%;
     border: none;
     padding: 20px;
+    background-color: $dark-grey-color;
+    gap: 10px;
     
     &[aria-expanded="true"]{
         transform: translateX(0);
     }
     &__video{
+        display: block;
         object-fit: cover;
         width: 100%;
         max-width: 320px;
         aspect-ratio: 350 / 262.50;
-        // height: 240px;
         z-index: -1;
-        background-color: $white-color;
+        background-color: transparent;
         
         source{
-            background-color: $white-color;
+            background-color: transparent;
         }
     }
 
     canvas{
+        display: block;
         width: 100%;
         max-width: 320px;
         aspect-ratio: 350 / 262.50;
-
-        // width: 300px;
-        // height: 240px;
         background-color: transparent;
     }
 
@@ -43,7 +45,7 @@
         @include h2;
         gap: 10px;
         font-size: 20px;
-        padding:8px 10px;
+        // padding:8px 10px;
         align-items: center;
         background-color: $sec-color;
         border: none;
@@ -63,8 +65,21 @@
             width: 52px;
         }
 
-        &--redirect{
+        &--redirect#redirect{
             display: none;
+            @include mobile-only{
+                margin-top: auto;
+            }
+        }
+
+        &--start{
+            @include mobile-only{
+                margin-top: auto;
+            }
+
+            &.barcode__control--sec{
+                margin-top: unset;
+            }
         }
         
         .icon{
@@ -78,7 +93,6 @@
 
     &__observer{
         position: relative;
-        width: 100%;
     }
 
     &__display{
@@ -91,4 +105,7 @@
         }
     }
 
+    .support{
+        order: 2;
+    }
 }

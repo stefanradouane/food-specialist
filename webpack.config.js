@@ -1,13 +1,4 @@
 const path = require('path');
-
-// module.exports = {
-//   entry: './src/scripts/script.js',
-//   output: {
-//     path: path.resolve(__dirname, 'dist'),
-//     filename: 'bundle.js'
-//   }
-// };
-
 const argv = require('yargs').argv;
 const paths = require('./build/paths');
 
@@ -19,7 +10,6 @@ const paths = require('./build/paths');
 module.exports = {
     // Entry points locations.
     entry:'./src/scripts/index.js',
-        // [`${paths.package.name}-js`]: `${paths.jsEntry}`,
 
     // (Output) bundle locations.
     output: {
@@ -48,6 +38,6 @@ module.exports = {
 
     // Use --production to optimize output.
     // mode: isProduction ? 'production' : 'development',
-    mode: 'development',
+    mode: '--production',
 
 };
