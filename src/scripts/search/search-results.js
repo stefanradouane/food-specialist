@@ -1,38 +1,79 @@
+/**
+ * @param {Array} data
+ * An array of all the objects send by the Open Food API.
+ * These objects are conveted to a HTML search result section. 
+ * 
+ * @returns {Array} of elements
+ * Each item contains a:
+ * Productname
+ * Quantity
+ * Image
+ * Nutriscore
+ * Proteinsection
+ */
+
 export const searchResults = (data) => {
     const results = data.map(product => {
+        // Create the item container with the className "result" and a data-id of the "product-id"
         const itemContainer = document.createElement("section");
         itemContainer.classList.add("result")
         itemContainer.dataset.id = product._id
+        
+        // Create all elements
+        const resultName = document.createElement("h2")
+        // const resultQuantity = document.createElement("p")
+        const resultImg = document.createElement("img");
+        const resultNutriScore = document.createElement("img")
+        const resultProteinSection = document.createElement("section")
 
-        const itemImage = document.createElement("img");
-        itemImage.classList.add("result__image")
-        itemImage.src = product.image_front_url ? product.image_front_url : "public/assets/images/eaten-apple.png"
+        // Add classes and set textContent or image.src
+        // Productname
+        resultName.classList.add("result__title")
+        resultName.classList.add("title")
+        resultName.classList.add("title--h3")
+        resultName.textContent = product.product_name;
 
-        const item = document.createElement("h2")
-        item.classList.add("result__title")
-        item.classList.add("title")
-        item.classList.add("title--h3")
-        item.textContent = product.product_name;
+        // Quantity
+        // resultQuantity.classList.add("result__quantity")
+        // resultQuantity.textContent = product.quantity;
 
-        const itemContent = document.createElement("p")
-        itemContent.classList.add("result__info")
-        itemContent.textContent = `${product.nutriments.proteins_100g}${product.nutriments.proteins_unit} eiwitten / 100${product.nutriments.proteins_unit}`;
+        // Image
+        resultImg.classList.add("result__image")
+        resultImg.setAttribute("loading", "lazy")
+        resultImg.src = product.image_front_url ? product.image_front_url : "public/assets/images/eaten-apple.png"
 
-        const itemQuantity = document.createElement("p")
-        itemQuantity.classList.add("result__quantity")
-        itemQuantity.textContent = `${product?.quantity}`;
+        // Nutriscore
+        resultNutriScore.classList.add("result__nutriscore")
+        resultNutriScore.src = `https://static.openfoodfacts.org/images/attributes/nutriscore-${product.nutriscore_grade ? product.nutriscore_grade : "unknown"}.svg`
 
+        // Proteinsection
+        resultProteinSection.classList.add("result__protein")
+        
+        // Make protein section        
+        const proteinIcon = document.createElement("img")
+        proteinIcon.src = "public/assets/images/protein.png"
+        proteinIcon.classList.add("result__protein-image")
+        
+        const proteinText = document.createElement("p")
+        if(isNaN(product.nutriments.proteins_100g)){
+            proteinText.textContent = "Eiwitten onbekend"
+        } else {
+            proteinText.textContent = `${Math.round(product.nutriments.proteins_100g * 10) / 10}${product.nutriments.proteins_unit} eiwitten / 100${product.nutriments.proteins_unit}`
+        }
+        proteinText.classList.add("result__protein-score")
+        
+        // Append protein section elements
+        resultProteinSection.appendChild(proteinIcon)
+        resultProteinSection.appendChild(proteinText)
 
-        const nutriScore = document.createElement("img")
-        nutriScore.classList.add("result__nutriscore")
-        nutriScore.src = `https://static.openfoodfacts.org/images/attributes/nutriscore-${product.nutriscore_grade ? product.nutriscore_grade : "unknown"}.svg`
-
-        itemContainer.appendChild(itemImage) 
-        itemContainer.appendChild(item) 
-        itemContainer.appendChild(itemContent) 
-        itemContainer.appendChild(itemQuantity) 
-        itemContainer.appendChild(nutriScore) 
+        // Append all elements  
+        itemContainer.appendChild(resultName) 
+        // itemContainer.appendChild(resultQuantity) 
+        itemContainer.appendChild(resultImg) 
+        itemContainer.appendChild(resultProteinSection) 
+        itemContainer.appendChild(resultNutriScore) 
         return itemContainer
     })
+    console.log(results)
     return results   
 }

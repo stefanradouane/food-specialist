@@ -76,8 +76,8 @@ class Search {
         // Set query as value on input
     }
 
-    fetchData(popState, onLoad, detailpage) {
-        if(onLoad){
+    fetchData(popState, onLoad, detailpage, paginator) {
+        if(onLoad || paginator){
             setUrl(this)
         } 
 
@@ -170,7 +170,8 @@ class Search {
 
     renderItems () {
         // RESET CHILDREN
-        const loadingIcon = document.querySelector("div.icon.icon--loading.icon--loading-results").cloneNode(true)
+        const loadingIcon = document.querySelector("div.icon.icon--loading.icon--loading-results")
+        // .cloneNode(true)
         if(this.searchContainer().children.length){
             const array = Array.from(this.searchContainer().children)
             array.forEach(item => item.remove())

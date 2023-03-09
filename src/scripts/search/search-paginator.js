@@ -5,9 +5,7 @@ export const paginatorSwitch = (item, search) => {
         })
     }
 
-
     switch (item.value) {
-
         case "previous":
             if(search.pageCount() == 1 ){
                 item.style.display = "none"
@@ -21,7 +19,7 @@ export const paginatorSwitch = (item, search) => {
                     removeListerens()
                     const current = search.page
                     search.page = current - 1;
-                    search.fetchData()
+                    search.fetchData(false, false, false, true)
                 })
             }
           break;
@@ -41,7 +39,7 @@ export const paginatorSwitch = (item, search) => {
                     removeListerens()
                     const current = search.page
                     search.page = current + 1;
-                    search.fetchData()
+                    search.fetchData(false, false, false, true)
                 }) 
             }
           break;
@@ -59,7 +57,7 @@ export const paginatorSwitch = (item, search) => {
                     removeListerens()
                     const current = search.page
                     search.page = 1;
-                    search.fetchData()
+                    search.fetchData(false, false, false, true)
                 }) 
             }
           break;
@@ -82,11 +80,11 @@ export const paginatorSwitch = (item, search) => {
                     removeListerens()
                     const current = search.page
                     search.page = 2;
-                    search.fetchData()
+                    search.fetchData(false, false, false, true)
                 }) 
             }
           break;
-
+        
           case "three":
             if(search.pageCount() <= 3) {
                   item.style.display = "none"  
@@ -99,7 +97,7 @@ export const paginatorSwitch = (item, search) => {
                     removeListerens()
                     const current = search.page
                     search.page = search.pageCount() - 4;
-                    search.fetchData()
+                    search.fetchData(false, false, false, true)
                 })
             } else if (search.page >= 5) {
                 item.style = ""  
@@ -110,7 +108,7 @@ export const paginatorSwitch = (item, search) => {
                     removeListerens()
                     const current = search.page
                     search.page = current - 1;
-                    search.fetchData()
+                    search.fetchData(false, false, false, true)
                 })
             } else if (search.page == "3") {
                 item.textContent = "3"
@@ -124,7 +122,7 @@ export const paginatorSwitch = (item, search) => {
                     removeListerens()
                     const current = search.page
                     search.page = 3;
-                    search.fetchData()
+                    search.fetchData(false, false, false, true)
                 }) 
             }
           break;
@@ -141,7 +139,7 @@ export const paginatorSwitch = (item, search) => {
                     removeListerens()
                     const current = search.page
                     search.page = search.pageCount() - 3;
-                    search.fetchData()
+                    search.fetchData(false, false, false, true)
                 })
             } else if (search.page == (search.pageCount() - 3)) {
                 item.textContent = search.pageCount() - 3
@@ -158,7 +156,7 @@ export const paginatorSwitch = (item, search) => {
                     removeListerens()
                     const current = search.page
                     search.page = 4;
-                    search.fetchData()
+                    search.fetchData(false, false, false, true)
                 }) 
             }
           break;
@@ -175,12 +173,12 @@ export const paginatorSwitch = (item, search) => {
                     removeListerens()
                     const current = search.page
                     search.page = search.pageCount() - 2;
-                    search.fetchData()
+                    search.fetchData(false, false, false, true)
                 })
             } else if (search.page == (search.pageCount() - 2)) {
                 item.textContent = search.pageCount() - 2
                 item.style = ""  
-            } else if (search.page >= 6) {
+            } else if (search.page >= 5) {
                 item.style = ""  
                 item.textContent = parseInt(search.page) + 1
 
@@ -190,7 +188,7 @@ export const paginatorSwitch = (item, search) => {
                     const current = search.page
                     console.log(current)
                     search.page = parseInt(current) + 1;
-                    search.fetchData()
+                    search.fetchData(false, false, false, true)
                 })
             } else {
                 item.textContent = "5"
@@ -201,7 +199,7 @@ export const paginatorSwitch = (item, search) => {
                     removeListerens()
                     const current = search.page
                     search.page = 5;
-                    search.fetchData()
+                    search.fetchData(false, false, false, true)
                 }) 
             }
           break;
@@ -219,7 +217,7 @@ export const paginatorSwitch = (item, search) => {
                     removeListerens()
                     const current = search.page
                     search.page = search.pageCount() - 1;
-                    search.fetchData()
+                    search.fetchData(false, false, false, true)
                 }) 
             } else if (search.page == (search.pageCount() - 2) || search.page == (search.pageCount() - 3)) {
                 item.textContent = search.pageCount() - 1
@@ -230,7 +228,7 @@ export const paginatorSwitch = (item, search) => {
                     removeListerens()
                     const current = search.page
                     search.page = search.pageCount() - 1;
-                    search.fetchData()
+                    search.fetchData(false, false, false, true)
                 }) 
               } else if (search.page == (search.pageCount() - 1)) {
                 item.textContent = search.pageCount() - 1
@@ -251,7 +249,7 @@ export const paginatorSwitch = (item, search) => {
                     removeListerens()
                     const current = search.pageCount()
                     search.page = current;
-                    search.fetchData()
+                    search.fetchData(false, false, false, true)
                 })
             }
 

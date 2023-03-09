@@ -8,8 +8,8 @@ export const getData = (type, query, page, pageSize) => {
         }
     }
 
-    const fetchExec = async (type, query, page, pageSize) => {
-        const response = await fetch(apiEndpoint(type, query, page, pageSize));
+    const fetchExec = async (atype, hoi, page, pageSize) => {
+        const response = await fetch(apiEndpoint(atype, hoi, page, pageSize));
         if (!response.ok) {
             throw new Error("Network response was not ok");
         }

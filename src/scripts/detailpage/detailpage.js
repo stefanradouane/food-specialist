@@ -1,35 +1,93 @@
 import {getData} from '../api/getdata'
 import {parseQuery, resolveQuery, serializeParams, setUrl} from '../url/url'
-
+import {flag} from 'country-emoji'
 
 export const detailPage = async (itemId, search, popState) => {
+    // If page is loaded set url.
     if(!popState){
         setUrl(search, itemId)
     }
-    const detailModal = document.querySelector(".detailpage")
-    const detailModalImage = document.querySelector(".detailpage__image")
-    const detailModalTitle = document.querySelector(".detailpage__title")
-    const detailModalProtein = document.querySelector(".detailpage__protein")
-    const productIngredients = document.querySelector(".detailpage__ingredients")
-    const productTable = document.querySelector(".detailpage__table")
-    const productQuantity = document.querySelector(".detailpage__quantity")
-    const productInfo = await getData("detail", itemId)
 
+    // Fetch detailpage data
+    const productInfo = await getData("detail", itemId)
+    
+    // Select elements
+    const detailPage = document.querySelector(".detailpage")
+    const detailPageTitle = document.querySelector(".detailpage__title")
+    const detailPageBrand = document.querySelector(".detailpage__brand")
+    const detailPageImage = document.querySelector(".detailpage__image")
+    const detailPageIngredients = document.querySelector(".detailpage__ingredients")
+    const detailPageCountries = document.querySelector(".detailpage__countries")
+    const detailPageTable = document.querySelector(".detailpage__table")
+    const detailPageQuantity = document.querySelector(".detailpage__quantity")
+    const detailPageNutriscore = document.querySelector(".detailpage__nutriscore")
+    const detailPageNovaScore = document.querySelector(".detailpage__novascore")
+    const detailPageEcoScore = document.querySelector(".detailpage__ecoscore")
+    const detailPageProtein = document.querySelector(".detailpage__protein-score")
+    const detailPageAllergens = document.querySelector(".detailpage__allergens")
+    const detailPageBarcode = document.querySelector(".detailpage__barcode")
+
+    // If product found
     if(productInfo) {
         const product = productInfo.product
-        detailModal.ariaExpanded = "true"
-        detailModalTitle.textContent = product.product_name
-        productQuantity.textContent = product.quantity
-        detailModalImage.src = product.image_front_url ? product.image_front_url : "public/assets/images/eaten-apple.png"
-        productIngredients.textContent = product.ingredients_text_nl ? product.ingredients_text_nl : product.ingredients_text_en ? product.ingredients_text_en : product.ingredients_text
+        console.log(product)
+        detailPage.ariaExpanded = "true"
+        detailPageTitle.textContent = product?.product_name
+        detailPageBrand.textContent = product.brands
+        detailPageImage.src = product.image_front_url ? product.image_front_url : "public/assets/images/eaten-apple.png"
+        detailPageQuantity.textContent = product.quantity
+        detailPageIngredients.textContent = product.ingredients_text_nl ? product.ingredients_text_nl : product.ingredients_text_en ? product.ingredients_text_en : product.ingredients_text
+        detailPageAllergens.textContent = allergieList(product.allergens_hierarchy)
+        detailPageCountries.textContent = "Product wordt verkocht in: ";
+        detailPageCountries.appendChild(countryList(product.countries_hierarchy))
+        detailPageNutriscore.src = `https://static.openfoodfacts.org/images/attributes/nutriscore-${product.nutriscore_grade ? product.nutriscore_grade : "unknown"}.svg`
+        detailPageNovaScore.src = `https://static.openfoodfacts.org/images/attributes/nova-group-${product.nova_group ? product.nova_group : "unknown"}.svg`
+        detailPageEcoScore.src = `https://static.openfoodfacts.org/images/attributes/ecoscore-${product.ecoscore_grade ? product.ecoscore_grade : "unknown"}.svg`
+
+        function allergieList (list) {
+            let returnedValue = "Allergenen: ";
+            if(list.length == 0){
+                returnedValue += "Geen"
+            } else {  
+                list.forEach((item, i, all) => {
+                    const words = item.split(":");
+                    if((all.length - 1) == i){
+                        returnedValue += String(words[1])[0].toUpperCase() + String(words[1]).substr(1);                    
+                    } else if((all.length - 2) == i){
+                        returnedValue += String(words[1])[0].toUpperCase() + String(words[1]).substr(1) + " " + "&"  + " ";                    
+                    } else {
+                        returnedValue += String(words[1])[0].toUpperCase() + String(words[1]).substr(1) + ","  + " ";
+                    }
+                })
+            }
+            return returnedValue
+        }
+
+        function countryList (list) {
+            let returnedObject = document.createElement("span");
+
+            list.forEach((item,) => {
+                const words = item.split(":")
+                if(words[1].includes("-")){
+                    const countryFlag = flag(words[1].replaceAll("-", " "));
+                    returnedObject.textContent += countryFlag + " "
+                } else {
+                    const countryFlag = flag(words[1]);
+                    returnedObject.textContent += countryFlag + " "
+                }
+            })
+            return returnedObject
+
+        }
+
+        detailPageBarcode.textContent = "Barcode: " +  `${product._id ? product._id : "Onbekend"}`
 
 
-        const nutriScore = document.createElement("img")
-        nutriScore.classList.add("detailpage__nutriscore")
-        nutriScore.src = `https://static.openfoodfacts.org/images/attributes/nutriscore-${product.nutriscore_grade ? product.nutriscore_grade : "unknown"}.svg`
-
-        detailModal.appendChild(nutriScore)
-
+        if(isNaN(product.nutriments.proteins_100g)){
+            detailPageProtein.textContent = "Eiwitten onbekend"
+        } else {
+            detailPageProtein.textContent = `${product.nutriments.proteins_100g}${product.nutriments.proteins_unit} eiwitten / 100${product.nutriments.proteins_unit}`
+        }
 
         
         const nutrimentsTable = () => {
@@ -38,17 +96,9 @@ export const detailPage = async (itemId, search, popState) => {
             }
 
             const tableBody = document.createElement("tbody")
-            let tableHeaderRow = document.createElement("tr");
-            let tableHeader = document.createElement("th");
-
-            tableHeader.textContent = "Voedingswaarden";
-            tableHeader.setAttribute("colspan", "3")
-            tableHeaderRow.appendChild(tableHeader)
-            tableBody.appendChild(tableHeaderRow)
-
             const firstRow = document.createElement("tr")
             const firstRowItem1 = document.createElement("td");
-            firstRowItem1.textContent = "Per"
+            firstRowItem1.textContent = "Voedingswaarden"
             const firstRowItem2 = document.createElement("td");
             firstRowItem2.textContent = "100g"
             const firstRowItem3 = document.createElement("td");
@@ -185,14 +235,11 @@ export const detailPage = async (itemId, search, popState) => {
         }
 
         // Reset table
-        if(productTable.children.length >= 1){
-            productTable.children[0].remove()
+        if(detailPageTable.children.length >= 1){
+            detailPageTable.children[0].remove()
         }
 
-        productTable.appendChild(nutrimentsTable())
-
-
-        // detailModalTable.
+        detailPageTable.appendChild(nutrimentsTable())
     }
 
     const control = document.querySelector(".detailpage__control");
@@ -204,6 +251,6 @@ export const detailPage = async (itemId, search, popState) => {
         if(search){
             search.id = ""
         }
-        detailModal.ariaExpanded = "false"
+        detailPage.ariaExpanded = "false"
     })
 }

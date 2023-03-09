@@ -31,6 +31,14 @@
         width: 30px;
         height: 30px;
     }
+
+    &--arrow{
+        height: 40%;
+
+        &-left{
+            rotate: 180deg;
+        }
+    }
 }
 
 @keyframes rotate {

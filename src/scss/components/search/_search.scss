@@ -3,7 +3,7 @@
     flex-direction: column;
     width: 100%;
     height: 100%;
-    overflow: auto;
+    overflow: hidden;
     gap: 16px;
 
     &__input {
@@ -27,9 +27,27 @@
         width: 100%;
         height: 100%;
         overflow: auto;
-        display: flex;
-        flex-direction: column;
+        // display: flex;
+        // flex-direction: column;
         position: relative;
+        display: grid;
+        // grid-auto-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 20px;
+
+        @include breakpoint(550px) {
+            grid-template-columns: repeat(2, minmax(auto, 1fr));            
+        }
+        
+        
+        @include laptop{
+            gap: 25px;
+            grid-template-columns: repeat(3, minmax(auto, 1fr));            
+        }
+        
+        @include desktop{
+            gap: 35px;        
+        }
     }
 
     &__form {

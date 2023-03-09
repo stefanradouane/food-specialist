@@ -6,13 +6,26 @@
     transition: 400ms all;
     
     h2{
-        // transition: 400ms all;
+        transition: 400ms all;
         overflow: hidden;
         height: auto;
     }
 
     &--scrolled{
-        // transform: translateY(-100%);
-        // margin-bottom: -110px;
+        @include breakpoint(520px){
+            margin-bottom: -120px;
+        };
+
+        @include responsive(margin-bottom, -162px, -120px, -120px);        
+
+        @include breakpoint(992px){
+            margin-bottom: -131px;
+        };
+
+        @include desktop{
+            margin-bottom: -148px;
+
+        }
+        transform: translateY(-110%);
     }
 }

@@ -8,15 +8,52 @@
     }
 
     &__control{
+        transition: 300ms all;
         cursor: pointer;
         padding:0;
-        width: 30px;
+        width: 27px;
         aspect-ratio: 1/1;  
         border-radius: 50%; 
         border: 1px solid $prim-color;  
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: transparent;
+        font-weight: 500;
+        color: $white-color;
+        font-size: 12px;
+
+        @include breakpoint(400px){
+            font-size: 14px;
+            width: 32.5px;
+        }
+
+
         
         &--active{
             background: $prim-color;
+            color: $black-color;
+        }
+
+        .icon{
+            fill: $white-color;
+        }
+
+        &[disabled]{
+            cursor: default;
+            .icon{
+                fill: $black-color;
+            }
+
+            &:hover{
+                background-color: inherit;
+                color: inherit;
+            }
+        }
+
+        &:hover{
+            background-color: $sec-color;
+            color: $black-color;
         }
     }
 }
