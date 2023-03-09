@@ -3,11 +3,9 @@
 .title{
     text-transform: uppercase;
     max-width: 1272px;
-    // color: $text-color;
     
     &--h1{
         @include h1;
-        // color: $prim-color;
         color: var(--prim-color);
     }
 
